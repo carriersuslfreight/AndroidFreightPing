@@ -61,7 +61,7 @@
         app:mask="(999) 999-9999"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/trackStateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
