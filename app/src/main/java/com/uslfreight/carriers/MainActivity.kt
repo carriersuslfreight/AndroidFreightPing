@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.uslfreight.carriers.location.LocationInteractor
 import com.uslfreight.carriers.location.MainLocationPresenter
 import com.uslfreight.carriers.location.MainLocationView
 import com.uslfreight.carriers.location.TrackingState
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter = MainLocationPresenter(this, applicationContext)
+        presenter = MainLocationPresenter(this, LocationInteractor(this), applicationContext)
 
         trackStateButton.setOnClickListener {
             checkPermissions()
