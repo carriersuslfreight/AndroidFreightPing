@@ -12,14 +12,14 @@ class ReportLocationRequest(
 
     private val TAG = ReportLocationRequest::class.java.simpleName
     private val headersMap = HashMap<String, String>()
-    private val userAgent = "userAgent"
+    private val userAgent = "android"
 
     override fun getRequestTag(): String = TAG
 
     override fun getBaseUrl(): String = Constants.LOCATION_BASE_URL
 
     override fun getRequestBody(): String {
-        return "Phone=${phoneNumber}&Username=${Constants.API_USERNAME}&Password=${Constants.API_PASSWORD}&Latitude=${latitude}&Longitude=${longitude}&UserAgent=${userAgent}"
+        return "Phone=${phoneNumber}&Username=${Constants.API_USERNAME}&Password=${Constants.API_PASSWORD}&UserAgent=${userAgent}&Latitude=${latitude}&Longitude=${longitude}"
     }
 
     override fun getHeadersMap(): Map<String, String> =
@@ -28,6 +28,7 @@ class ReportLocationRequest(
             }
 
     override fun getRequestEndpoint(apiEndpoints: ApiEndpoints): Call<ResponseBody> {
-        return apiEndpoints.reportLocation()
+        return apiEndpoints.postReportLocation()
+//        return apiEndpoints.getReportLocation(phoneNumber, Constants.API_USERNAME, Constants.API_PASSWORD, userAgent, latitude, longitude)
     }
 }

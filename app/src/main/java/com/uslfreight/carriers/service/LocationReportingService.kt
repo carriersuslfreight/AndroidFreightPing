@@ -50,11 +50,9 @@ class LocationReportingService() : IntentService(Constants.LOCATION_REPORTING_SE
 
     private fun updateLocation(locationManagement: LocationManagementUtil, networkService: NetworkService) {
         val locationPair = locationManagement.getLocation()
-        val latitude = locationPair.first
-        val longitude = locationPair.second
-        Log.d(TAG, "Attempting to update location with latitude: $latitude, and longitude: $longitude")
-        val request = ReportLocationRequest(phoneNumber, latitude, longitude)
-        networkService.sendRequest(request, this)
+        Log.d(TAG, "Attempting to update location with latitude: ${locationPair.first}, and longitude: ${locationPair.second}")
+
+        networkService.sendRequest(ReportLocationRequest(phoneNumber, locationPair.first, locationPair.second), this)
     }
 
     override fun onDestroy() {

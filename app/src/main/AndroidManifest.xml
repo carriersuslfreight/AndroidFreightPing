@@ -39,9 +39,6 @@
             android:name=".service.LocationBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
-            <!--<intent-filter>-->
-                <!--<action android:name="com.uslfreight.carriers.BROADCAST_EVENT"/>-->
-            <!--</intent-filter>-->
         </receiver>
     </application>
 

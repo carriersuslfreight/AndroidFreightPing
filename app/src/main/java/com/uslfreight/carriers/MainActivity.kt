@@ -1,19 +1,22 @@
 package com.uslfreight.carriers
 
 import android.Manifest
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import com.uslfreight.carriers.location.LocationInteractor
+import android.widget.Toast
 import com.uslfreight.carriers.location.MainLocationPresenter
 import com.uslfreight.carriers.location.MainLocationView
 import com.uslfreight.carriers.location.TrackingState
 import com.uslfreight.carriers.util.Constants
 import kotlinx.android.synthetic.main.activity_main.*
-
-
 
 
 class MainActivity : AppCompatActivity(), MainLocationView {
@@ -25,8 +28,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter = MainLocationPresenter(this, LocationInteractor(this), applicationContext)
-
+        presenter = MainLocationPresenter(this, applicationContext)
 
         trackStateButton.setOnClickListener {
             checkPermissions()
@@ -44,7 +46,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     override fun setTrackButtonState(trackingState: TrackingState) {
         this.state = trackingState
 
-        when(trackingState) {
+        when (trackingState) {
             is TrackingState.Tracking -> {
                 trackStateButton.isEnabled = true
                 phoneEditText.setText("")
@@ -66,40 +68,56 @@ class MainActivity : AppCompatActivity(), MainLocationView {
         val finePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         if (coursePermission == PackageManager.PERMISSION_GRANTED && finePermission == PackageManager.PERMISSION_GRANTED) {
             presenter.stateButtonClicked()
-        }
-        else {
-            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-//            }
-//            else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-                        PERMISSIONS_REQUEST_LOCATION_CODE)
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-//            }
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+                    PERMISSIONS_REQUEST_LOCATION_CODE)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-
-        when(requestCode) {
+        when (requestCode) {
             PERMISSIONS_REQUEST_LOCATION_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     checkPermissions()
-                }
-                else {
-                    // permission denied, show alert dialog
+                } else {
+                    showPermissionDialog()
                 }
             }
             else -> {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
+        }
+    }
+
+    private fun showPermissionDialog() {
+        var alertDialog: AlertDialog? = null
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(Constants.SETTINGS_DIALOG_TITLE)
+        builder.setMessage(Constants.SETTINGS_DIALOG_MESSAGE)
+        builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+            goToSettings()
+        })
+        builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+            alertDialog?.dismiss()
+        })
+        alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun goToSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivityForResult(intent, Constants.REQUEST_APP_SETTINGS_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            Constants.REQUEST_APP_SETTINGS_CODE -> {
+                Toast.makeText(this, Constants.LOCATION_PERMISSION_GRANTED, Toast.LENGTH_LONG).show()
             }
         }
     }

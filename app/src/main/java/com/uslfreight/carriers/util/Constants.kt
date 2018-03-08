@@ -16,14 +16,16 @@ object Constants {
     val BUTTON_STATE_TITLE_TRACKING = "Stop Tracking"
 
 //    val DEFAULT_REPORTING_INTERVAL = 600000L // 10 * 60 * 1000 10 minutes
-    val DEFAULT_REPORTING_INTERVAL = 1000L
+    val DEFAULT_REPORTING_INTERVAL = 10000L
 
+    // Service Events
     val BROADCAST_EVENT = "com.uslfreight.carriers.BROADCAST_EVENT"
-
-    // System Messages
     val LOCATION_REPORTING_SERVICE_ACTION = "LocationReportingService"
     val LOCATION_REPORTING_BROADCAST_ACTION = "LocationReportingServiceBroadcast"
+    val APPLICATION_SETTINGS_ACTION = "ActionSettingsAction"
+    val REQUEST_APP_SETTINGS_CODE = 9999
 
+    // System Messages
     val COMPATIBILITY_DIALOG_TITLE = "Device Compatibility"
     val COMPATIBILITY_DIALOG_MESSAGE = "This device is not supported."
 
@@ -31,11 +33,13 @@ object Constants {
     val VALIDATION_DIALOG_MESSAGE = "Please enter a valid 10 digit phone number, including area code and number."
 
     val SETTINGS_DIALOG_TITLE = "Enable Location"
-    val SETTINGS_DIALOG_MESSAGE = "Your Locations Settings are set to 'Off'.\nPlease Enable Location to use this application."
+    val SETTINGS_DIALOG_MESSAGE = "Locations Settings are set to 'Off'.\nThis application required Location permissions in order to run."
     val SETTINGS_DIALOG_POS_BUTTON = "Location Settings"
     val SETTINGS_DIALOG_NEG_BUTTON = "Cancel"
 
+    // Toast messages
     val LOCATION_REPORTING_STOPPED = "Location reporting has been stopped."
+    val LOCATION_PERMISSION_GRANTED = "Location permission granted"
 
     // Error Messages
     val INTERRUPTED_THREAD_ERROR = "The application was unable to allocate sufficient resources to run. Please restart the application."

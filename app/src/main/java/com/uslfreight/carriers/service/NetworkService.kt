@@ -35,9 +35,11 @@ class NetworkService {
 
         val api = retrofit.create(ApiEndpoints::class.java)
         val call = networkRequest.getRequestEndpoint(api)
+
         Log.d(TAG, "Attempting call with url: " + call.request().toString())
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
                 if (response.body() != null) {
                     try {
                         var bodyContent = response.body()!!.string()

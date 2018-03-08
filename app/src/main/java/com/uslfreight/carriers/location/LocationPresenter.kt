@@ -2,6 +2,7 @@ package com.uslfreight.carriers.location
 
 import android.content.Context
 import android.preference.PreferenceManager
+import com.uslfreight.carriers.service.LocationReportingService
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
 
@@ -13,14 +14,13 @@ interface MainLocationView {
     fun getPhoneNumber(): String
 }
 
-class MainLocationPresenter(val mainLocationView: MainLocationView, val interactor: LocationInteractor, val context: Context): LocationCallback {
+class MainLocationPresenter(val mainLocationView: MainLocationView, val context: Context) {
 
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     fun initializeState() {
         mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
         mainLocationView.initializeView(getSavedPhoneNumber())
-        interactor.setCallback(this)
     }
 
     fun stateButtonClicked() {
@@ -28,7 +28,7 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
         when (trackingState) {
             is TrackingState.Tracking -> {
                 mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
-                interactor.stopReportingService()
+                LocationReportingService.stopActionReportLocation(context)
             }
             is TrackingState.NotTracking -> {
 
@@ -44,13 +44,13 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
                         savePhoneNumber(phoneNumber)
                     }
                     mainLocationView.setTrackButtonState(TrackingState.Tracking(Constants.BUTTON_STATE_TITLE_TRACKING))
-                    interactor.startReportingService(phoneNumber)
+                    LocationReportingService.startActionReportLocation(context, phoneNumber)
                 }
 
             }
             is TrackingState.Error -> {
                 mainLocationView.setTrackButtonState(TrackingState.Error)
-                interactor.stopReportingService()
+                LocationReportingService.stopActionReportLocation(context)
                 // show error dialog
             }
         }
