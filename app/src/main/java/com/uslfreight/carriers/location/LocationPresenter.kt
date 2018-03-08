@@ -68,9 +68,7 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
         sharedPreferences.edit().putString(Constants.PHONE_NUMBER, phoneNumber).apply()
     }
 
-    private fun isValidPhoneFormat(phoneNumber: String): Boolean {
-        return phoneNumber.length == 10
-    }
+    private fun isValidPhoneFormat(phoneNumber: String): Boolean = (phoneNumber.length == 10)
 
     private fun formatPhoneNumber(phoneNumber: String): String {
         var formatted = StringBuilder()

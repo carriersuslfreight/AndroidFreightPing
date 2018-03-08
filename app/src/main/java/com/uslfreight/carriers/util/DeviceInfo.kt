@@ -43,9 +43,7 @@ class DeviceInfo(app: Application) {
         try {
             deviceID = Settings.Secure.getString(app.applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
             if (deviceID == null || deviceID == "9774d56d682e549c") {
-                val tman = app
-                        .applicationContext.getSystemService(
-                        Context.TELEPHONY_SERVICE) as TelephonyManager
+                val tman = app.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 if (tman != null) {
                     deviceID = tman.deviceId
                 } else {

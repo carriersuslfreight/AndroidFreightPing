@@ -1,6 +1,7 @@
 package com.uslfreight.carriers.location
 
 import android.content.Context
+import com.uslfreight.carriers.service.LocationReportingService
 
 
 class LocationInteractor(val context: Context) {

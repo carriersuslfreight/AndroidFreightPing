@@ -1,6 +1,8 @@
-package com.uslfreight.carriers.network
+package com.uslfreight.carriers.service
 
 import android.util.Log
+import com.uslfreight.carriers.network.ApiEndpoints
+import com.uslfreight.carriers.network.NetworkResponseCallback
 import com.uslfreight.carriers.request.NetworkRequest
 import com.uslfreight.carriers.util.Constants
 import okhttp3.Headers
@@ -26,7 +28,6 @@ class NetworkService {
 
     fun sendRequest(networkRequest: NetworkRequest, callback: NetworkResponseCallback) {
         val body = RequestBody.create(mediaType, networkRequest.getRequestBody())
-        Log.d(networkRequest.getRequestTag(), "Request for base request type: ")
         Log.d(networkRequest.getRequestTag(), "Request body: " + networkRequest.getRequestBody())
 
         val client = getOkhttpClient(networkRequest.getHeadersMap(), body)
@@ -37,10 +38,9 @@ class NetworkService {
         Log.d(TAG, "Attempting call with url: " + call.request().toString())
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response?.body() != null) {
-                    var bodyContent: String? = null
+                if (response.body() != null) {
                     try {
-                        bodyContent = response.body()!!.string()
+                        var bodyContent = response.body()!!.string()
                         callback.onSuccess(bodyContent)
                     } catch (e: IOException) {
                         Log.e(TAG, "Unable to retrieve response", e)
@@ -78,5 +78,4 @@ class NetworkService {
                 .callFactory(okHttpClient)
                 .build()
     }
-
 }

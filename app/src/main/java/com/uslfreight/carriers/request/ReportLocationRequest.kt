@@ -6,7 +6,6 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 
 class ReportLocationRequest(
-        val url: String,
         val phoneNumber: String,
         val latitude: String,
         val longitude: String): NetworkRequest {
@@ -17,7 +16,7 @@ class ReportLocationRequest(
 
     override fun getRequestTag(): String = TAG
 
-    override fun getBaseUrl(): String = url
+    override fun getBaseUrl(): String = Constants.LOCATION_BASE_URL
 
     override fun getRequestBody(): String {
         return "Phone=${phoneNumber}&Username=${Constants.API_USERNAME}&Password=${Constants.API_PASSWORD}&Latitude=${latitude}&Longitude=${longitude}&UserAgent=${userAgent}"
