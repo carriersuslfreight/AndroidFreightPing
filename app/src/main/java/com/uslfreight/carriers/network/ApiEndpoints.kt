@@ -20,4 +20,13 @@ interface ApiEndpoints {
             @Query("Latitude") latitude: String,
             @Query("Longitude") longitude: String
     ):Call<ResponseBody>
+
+    @POST("/ws/index.asmx/GetTimer")
+    fun postGetTimer():Call<ResponseBody>
+
+    @GET("/ws/index.asmx/GetTimer")
+    fun getGetTimer(
+            @Query("Username") username: String,
+            @Query("Password") password: String
+    ): Call<ResponseBody>
 }

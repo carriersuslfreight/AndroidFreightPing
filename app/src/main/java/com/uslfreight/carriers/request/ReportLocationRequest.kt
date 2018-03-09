@@ -14,6 +14,10 @@ class ReportLocationRequest(
     private val headersMap = HashMap<String, String>()
     private val userAgent = "android"
 
+    override fun addHeader(key: String, value: String) {
+        headersMap.put(key, value)
+    }
+
     override fun getRequestTag(): String = TAG
 
     override fun getBaseUrl(): String = Constants.LOCATION_BASE_URL

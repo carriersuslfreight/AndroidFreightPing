@@ -2,6 +2,7 @@ package com.uslfreight.carriers.location
 
 import android.content.Context
 import android.preference.PreferenceManager
+import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
 
@@ -21,9 +22,12 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
         mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
         mainLocationView.initializeView(getSavedPhoneNumber())
         interactor.setCallback(this)
+
+        // Make timer request
     }
 
     fun stateButtonClicked() {
+        interactor.requestIterationTime(GetTimerRequest())
         val trackingState = mainLocationView.getTrackingButtonState()
         when (trackingState) {
             is TrackingState.Tracking -> {

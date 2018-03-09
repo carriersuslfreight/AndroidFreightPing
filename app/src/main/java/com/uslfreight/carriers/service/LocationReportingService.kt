@@ -12,11 +12,12 @@ import com.uslfreight.carriers.request.ReportLocationRequest
 import com.uslfreight.carriers.util.Constants
 import com.uslfreight.carriers.util.LocationManagementUtil
 
-class LocationReportingService() : IntentService(Constants.LOCATION_REPORTING_SERVICE_ACTION), NetworkResponseCallback {
+class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVICE_ACTION), NetworkResponseCallback {
 
     private val TAG = LocationReportingService::class.java.simpleName
     private var runFlag = true
     private lateinit var phoneNumber: String
+    private var reportingInterval: Long = Constants.DEFAULT_REPORTING_INTERVAL
     private lateinit var broadcastIntent: Intent
 
     override fun onHandleIntent(intent: Intent?) {
@@ -24,6 +25,7 @@ class LocationReportingService() : IntentService(Constants.LOCATION_REPORTING_SE
             val action = intent.action
             if (ACTION_REPORT_LOCATION == action) {
                 phoneNumber = intent.getStringExtra(Constants.PHONE_NUMBER)
+                reportingInterval = intent.getLongExtra(Constants.LOCATION_REPORTING_INTERVAL, Constants.DEFAULT_REPORTING_INTERVAL)
                 handleActionReportLocation()
             }
         }
@@ -35,7 +37,7 @@ class LocationReportingService() : IntentService(Constants.LOCATION_REPORTING_SE
         try {
             while (runFlag) {
                 updateLocation(locationManagement, networkService)
-                Thread.sleep(Constants.DEFAULT_REPORTING_INTERVAL)
+                Thread.sleep(reportingInterval)
             }
         }
         catch (ie: InterruptedException) {
@@ -79,11 +81,12 @@ class LocationReportingService() : IntentService(Constants.LOCATION_REPORTING_SE
     companion object {
         private val ACTION_REPORT_LOCATION = "com.uslfreight.carriers.location.action.REPORT"
 
-        fun startActionReportLocation(context: Context, phoneNumber: String) {
+        fun startActionReportLocation(context: Context, phoneNumber: String, reportingInterval: Long) {
             Log.d(TAG, "Initializing location reporting with phone number: $phoneNumber")
             val intent = Intent(context, LocationReportingService::class.java)
             intent.action = ACTION_REPORT_LOCATION
             intent.putExtra(Constants.PHONE_NUMBER, phoneNumber)
+            intent.putExtra(Constants.LOCATION_REPORTING_INTERVAL, reportingInterval)
             context.startService(intent)
         }
 

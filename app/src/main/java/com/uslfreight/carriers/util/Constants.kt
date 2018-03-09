@@ -10,7 +10,7 @@ object Constants {
 
     val DEFAULT_CONNECTION_TIMEOUT_SEC = 60
     val DEFAULT_READ_TIMEOUT_SEC = 60
-    val MEDIA_TYPE_JSON_TEXT = "application/json; charset=utf-8"
+    val MEDIA_TYPE_FORM = "application/x-www-form-urlencoded"
 
     val DEFAULT_BUTTON_STATE_TITLE = "Start Tracking"
     val BUTTON_STATE_TITLE_TRACKING = "Stop Tracking"
@@ -24,6 +24,7 @@ object Constants {
     val LOCATION_REPORTING_BROADCAST_ACTION = "LocationReportingServiceBroadcast"
     val APPLICATION_SETTINGS_ACTION = "ActionSettingsAction"
     val REQUEST_APP_SETTINGS_CODE = 9999
+    val LOCATION_REPORTING_INTERVAL = "locationReportingInterval"
 
     // System Messages
     val COMPATIBILITY_DIALOG_TITLE = "Device Compatibility"
