@@ -25,7 +25,7 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
         interactor.setCallback(this)
 
         // Make timer request
-//        interactor.requestIterationTime(GetTimerRequest())
+        interactor.requestIterationTime(GetTimerRequest())
     }
 
     override fun onReportIntervalSuccess(reportInteral: Long) {
@@ -33,7 +33,6 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
     }
 
     fun stateButtonClicked() {
-        interactor.requestIterationTime(GetTimerRequest())
         val trackingState = mainLocationView.getTrackingButtonState()
         when (trackingState) {
             is TrackingState.Tracking -> {
