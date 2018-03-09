@@ -14,9 +14,10 @@ interface MainLocationView {
     fun getPhoneNumber(): String
 }
 
-class MainLocationPresenter(val mainLocationView: MainLocationView, val interactor: LocationInteractor, val context: Context): LocationCallback{
+class MainLocationPresenter(val mainLocationView: MainLocationView, val interactor: LocationInteractor, val context: Context): OnLocationRequestCallback{
 
-    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private var reportInteral: Long = 0L
 
     fun initializeState() {
         mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
@@ -24,6 +25,11 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
         interactor.setCallback(this)
 
         // Make timer request
+//        interactor.requestIterationTime(GetTimerRequest())
+    }
+
+    override fun onReportIntervalSuccess(reportInteral: Long) {
+        this.reportInteral = reportInteral
     }
 
     fun stateButtonClicked() {
@@ -48,7 +54,7 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
                         savePhoneNumber(phoneNumber)
                     }
                     mainLocationView.setTrackButtonState(TrackingState.Tracking(Constants.BUTTON_STATE_TITLE_TRACKING))
-                    interactor.startReportingService(phoneNumber)
+                    interactor.startReportingService(phoneNumber, reportInteral)
                 }
 
             }

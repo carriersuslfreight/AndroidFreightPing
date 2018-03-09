@@ -15,8 +15,7 @@ object Constants {
     val DEFAULT_BUTTON_STATE_TITLE = "Start Tracking"
     val BUTTON_STATE_TITLE_TRACKING = "Stop Tracking"
 
-//    val DEFAULT_REPORTING_INTERVAL = 600000L // 10 * 60 * 1000 10 minutes
-    val DEFAULT_REPORTING_INTERVAL = 10000L
+    val DEFAULT_REPORTING_INTERVAL = 10L
 
     // Service Events
     val BROADCAST_EVENT = "com.uslfreight.carriers.BROADCAST_EVENT"
@@ -25,10 +24,6 @@ object Constants {
     val APPLICATION_SETTINGS_ACTION = "ActionSettingsAction"
     val REQUEST_APP_SETTINGS_CODE = 9999
     val LOCATION_REPORTING_INTERVAL = "locationReportingInterval"
-
-    // System Messages
-    val COMPATIBILITY_DIALOG_TITLE = "Device Compatibility"
-    val COMPATIBILITY_DIALOG_MESSAGE = "This device is not supported."
 
     val VALIDATION_DIALOG_TITLE = "Phone Number Validation"
     val VALIDATION_DIALOG_MESSAGE = "Please enter a valid 10 digit phone number, including area code and number."
