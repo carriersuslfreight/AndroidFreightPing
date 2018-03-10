@@ -12,16 +12,17 @@ interface MainLocationView {
     fun setTrackButtonState(trackingState: TrackingState)
     fun getTrackingButtonState(): TrackingState
     fun getPhoneNumber(): String
+    fun showErrorDialog(title: String, message: String)
 }
 
-class MainLocationPresenter(val mainLocationView: MainLocationView, val interactor: LocationInteractor, val context: Context): OnLocationRequestCallback{
+class MainLocationPresenter(val view: MainLocationView, val interactor: LocationInteractor, val context: Context): OnLocationRequestCallback{
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var reportInteral: Long = 0L
 
     fun initializeState() {
-        mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
-        mainLocationView.initializeView(getSavedPhoneNumber())
+        view.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
+        view.initializeView(getSavedPhoneNumber())
         interactor.setCallback(this)
 
         // Make timer request
@@ -33,15 +34,15 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
     }
 
     fun stateButtonClicked() {
-        val trackingState = mainLocationView.getTrackingButtonState()
+        val trackingState = view.getTrackingButtonState()
         when (trackingState) {
             is TrackingState.Tracking -> {
-                mainLocationView.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
+                view.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
                 interactor.stopReportingService()
             }
             is TrackingState.NotTracking -> {
 
-                val phoneNumber = formatPhoneNumber(mainLocationView.getPhoneNumber())
+                val phoneNumber = formatPhoneNumber(view.getPhoneNumber())
                 if (isValidPhoneFormat(phoneNumber)) {
                     val savedPhoneNumber = getSavedPhoneNumber()
                     if( !savedPhoneNumber.isNullOrBlank()) {
@@ -52,13 +53,16 @@ class MainLocationPresenter(val mainLocationView: MainLocationView, val interact
                     else {
                         savePhoneNumber(phoneNumber)
                     }
-                    mainLocationView.setTrackButtonState(TrackingState.Tracking(Constants.BUTTON_STATE_TITLE_TRACKING))
+                    view.setTrackButtonState(TrackingState.Tracking(Constants.BUTTON_STATE_TITLE_TRACKING))
                     interactor.startReportingService(phoneNumber, reportInteral)
+                }
+                else {
+                    view.showErrorDialog(Constants.VALIDATION_DIALOG_TITLE, Constants.VALIDATION_DIALOG_MESSAGE)
                 }
 
             }
             is TrackingState.Error -> {
-                mainLocationView.setTrackButtonState(TrackingState.Error)
+                view.setTrackButtonState(TrackingState.Error)
                 interactor.stopReportingService()
                 // show error dialog
             }

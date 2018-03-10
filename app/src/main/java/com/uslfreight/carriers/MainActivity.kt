@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter = MainLocationPresenter(this, LocationInteractor(NetworkService(),this), applicationContext)
+        presenter = MainLocationPresenter(this, LocationInteractor(NetworkService(), this), applicationContext)
 
         trackStateButton.setOnClickListener {
             checkPermissions()
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
             goToSettings()
         })
         builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON, DialogInterface.OnClickListener { dialog, id ->
-            alertDialog?.dismiss()
+            dialog.dismiss()
         })
         alertDialog = builder.create()
         alertDialog.show()
@@ -117,11 +117,21 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
+        when (requestCode) {
             Constants.REQUEST_APP_SETTINGS_CODE -> {
                 Toast.makeText(this, Constants.LOCATION_PERMISSION_GRANTED, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun showErrorDialog(title: String, message: String) {
+        AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(Constants.VALIDATION_POS_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+                    dialog.dismiss()
+                }).create().show()
+
     }
 
     override fun getTrackingButtonState(): TrackingState = state
