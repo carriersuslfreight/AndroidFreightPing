@@ -1,7 +1,6 @@
 package com.uslfreight.carriers.location
 
-import android.content.Context
-import android.preference.PreferenceManager
+import android.content.SharedPreferences
 import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
@@ -15,12 +14,19 @@ interface MainLocationView {
     fun showErrorDialog(title: String, message: String)
 }
 
-class MainLocationPresenter(private val view: MainLocationView, private val interactor: LocationInteractor, context: Context): OnLocationRequestCallback{
+interface MainLocationPresenter {
+    fun initializeState()
+    fun stateButtonClicked()
+}
 
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+class MainLocationPresenterImpl(
+        private val view: MainLocationView,
+        private val interactor: LocationInteractor,
+        private val sharedPreferences: SharedPreferences): MainLocationPresenter, OnLocationRequestCallback{
+
     private var reportInteral: Long = 0L
 
-    fun initializeState() {
+    override fun initializeState() {
         view.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
         view.initializeView(getSavedPhoneNumber())
         interactor.setCallback(this)
@@ -37,7 +43,7 @@ class MainLocationPresenter(private val view: MainLocationView, private val inte
         view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
     }
 
-    fun stateButtonClicked() {
+    override fun stateButtonClicked() {
         val trackingState = view.getTrackingButtonState()
         when (trackingState) {
             is TrackingState.Tracking -> {

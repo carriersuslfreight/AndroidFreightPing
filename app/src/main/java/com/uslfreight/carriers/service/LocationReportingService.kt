@@ -33,7 +33,7 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
 
     private fun handleActionReportLocation() {
         val locationManagement = LocationManagementUtil(applicationContext)
-        val networkService = NetworkService()
+        val networkService = NetworkServiceImpl()
         try {
             while (runFlag) {
                 updateLocation(locationManagement, networkService)

@@ -15,16 +15,23 @@ interface OnLocationRequestCallback {
     fun onReportIntervalFailure(e: Throwable)
 }
 
-class LocationInteractor(private val networkService: NetworkService, private val context: Context): NetworkResponseCallback {
+interface LocationInteractor {
+    fun setCallback(callback: OnLocationRequestCallback)
+    fun requestIterationTime(request: GetTimerRequest)
+    fun startReportingService(phoneNumber: String, reportInteral: Long)
+    fun stopReportingService()
+}
+
+class LocationInteractorImpl (private val networkService: NetworkService, private val context: Context): LocationInteractor, NetworkResponseCallback {
 
     private val TAG = LocationInteractor::class.java.simpleName
     private lateinit var callback: OnLocationRequestCallback
 
-    fun setCallback(callback: OnLocationRequestCallback) {
+    override fun setCallback(callback: OnLocationRequestCallback) {
         this.callback = callback
     }
 
-    fun requestIterationTime(request: GetTimerRequest) {
+    override fun requestIterationTime(request: GetTimerRequest) {
         try {
             networkService.sendRequest(request, this)
         }
@@ -33,11 +40,11 @@ class LocationInteractor(private val networkService: NetworkService, private val
         }
     }
 
-    fun startReportingService(phoneNumber: String, reportInteral: Long) {
+    override fun startReportingService(phoneNumber: String, reportInteral: Long) {
         LocationReportingService.startActionReportLocation(context, phoneNumber, reportInteral)
     }
 
-    fun stopReportingService() {
+    override fun stopReportingService() {
         LocationReportingService.stopActionReportLocation(context)
     }
 

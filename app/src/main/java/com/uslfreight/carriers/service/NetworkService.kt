@@ -19,7 +19,11 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class NetworkService {
+interface NetworkService {
+    fun sendRequest(networkRequest: NetworkRequest, callback: NetworkResponseCallback)
+}
+
+class NetworkServiceImpl: NetworkService {
 
     private val TAG = NetworkService::class.java.simpleName
 
@@ -27,8 +31,7 @@ class NetworkService {
     private val readTimeout = Constants.DEFAULT_READ_TIMEOUT_SEC
     private val mediaType = MediaType.parse(Constants.MEDIA_TYPE_FORM)
 
-    fun sendRequest(networkRequest: NetworkRequest, callback: NetworkResponseCallback) {
-
+    override fun sendRequest(networkRequest: NetworkRequest, callback: NetworkResponseCallback) {
         var body: RequestBody? = null
 
         if( !networkRequest.getRequestBody().isNullOrEmpty()) {

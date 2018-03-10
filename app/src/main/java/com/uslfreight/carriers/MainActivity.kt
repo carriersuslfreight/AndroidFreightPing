@@ -5,17 +5,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.uslfreight.carriers.location.LocationInteractor
+import com.uslfreight.carriers.location.LocationInteractorImpl
 import com.uslfreight.carriers.location.MainLocationPresenter
+import com.uslfreight.carriers.location.MainLocationPresenterImpl
 import com.uslfreight.carriers.location.MainLocationView
 import com.uslfreight.carriers.location.TrackingState
-import com.uslfreight.carriers.service.NetworkService
+import com.uslfreight.carriers.service.NetworkServiceImpl
 import com.uslfreight.carriers.util.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +31,10 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter = MainLocationPresenter(this, LocationInteractor(NetworkService(), this), applicationContext)
+        presenter = MainLocationPresenterImpl(
+                this,
+                LocationInteractorImpl(NetworkServiceImpl(), this),
+                PreferenceManager.getDefaultSharedPreferences(this))
 
         trackStateButton.setOnClickListener {
             checkPermissions()
