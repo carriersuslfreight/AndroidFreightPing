@@ -6,16 +6,16 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 
 class ReportLocationRequest(
-        val phoneNumber: String,
-        val latitude: String,
-        val longitude: String): NetworkRequest {
+        private val phoneNumber: String,
+        private val latitude: String,
+        private val longitude: String): NetworkRequest {
 
     private val TAG = ReportLocationRequest::class.java.simpleName
     private val headersMap = HashMap<String, String>()
     private val userAgent = "android"
 
     override fun addHeader(key: String, value: String) {
-        headersMap.put(key, value)
+        headersMap[key] = value
     }
 
     override fun getRequestTag(): String = TAG

@@ -8,7 +8,8 @@
     android:background="@android:color/white"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.uslfreight.carriers.MainActivity">
+    tools:context="com.uslfreight.carriers.MainActivity"
+    tools:ignore="Overdraw">
 
     <android.support.constraint.Guideline
         android:id="@+id/guidelineHorizontal"
@@ -53,7 +54,7 @@
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/border"
-        android:hint="(___) ___ - ____"
+        android:hint="@string/phone_hint_mask"
         android:textColor="@android:color/black"
         android:textColorHint="@color/colorHint"
         app:layout_constraintStart_toStartOf="parent"

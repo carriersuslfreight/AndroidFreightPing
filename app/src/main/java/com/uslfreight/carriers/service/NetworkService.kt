@@ -49,7 +49,7 @@ class NetworkService {
 
                 if (response.body() != null) {
                     try {
-                        var bodyContent = response.body()!!.string()
+                        val bodyContent = response.body()!!.string()
                         callback.onSuccess(bodyContent)
                     } catch (e: IOException) {
                         Log.e(TAG, "Unable to retrieve response", e)

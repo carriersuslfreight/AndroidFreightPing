@@ -12,9 +12,10 @@ import com.uslfreight.carriers.util.XMLUtil
 
 interface OnLocationRequestCallback {
     fun onReportIntervalSuccess(reportInteral: Long)
+    fun onReportIntervalFailure(e: Throwable)
 }
 
-class LocationInteractor(val networkService: NetworkService, val context: Context): NetworkResponseCallback {
+class LocationInteractor(private val networkService: NetworkService, private val context: Context): NetworkResponseCallback {
 
     private val TAG = LocationInteractor::class.java.simpleName
     private lateinit var callback: OnLocationRequestCallback
@@ -28,7 +29,7 @@ class LocationInteractor(val networkService: NetworkService, val context: Contex
             networkService.sendRequest(request, this)
         }
         catch(e: Exception) {
-            onFailure(e.message ?: "" )
+            callback.onReportIntervalFailure(e)
         }
     }
 
@@ -54,8 +55,6 @@ class LocationInteractor(val networkService: NetworkService, val context: Contex
     }
 
     override fun onFailure(message: String) {
-        Log.d(TAG, "Received reporting interval failure response: $message")
-
-        // Show alert or use default interval?
+        callback.onReportIntervalFailure(Exception("Received reporting interval failure $message"))
     }
 }

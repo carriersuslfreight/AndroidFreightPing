@@ -1,7 +1,6 @@
 package com.uslfreight.carriers
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -98,10 +97,10 @@ class MainActivity : AppCompatActivity(), MainLocationView {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(Constants.SETTINGS_DIALOG_TITLE)
         builder.setMessage(Constants.SETTINGS_DIALOG_MESSAGE)
-        builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+        builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON, { dialog, id ->
             goToSettings()
         })
-        builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+        builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON, { dialog, id ->
             dialog.dismiss()
         })
         alertDialog = builder.create()
@@ -128,7 +127,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
         AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(Constants.VALIDATION_POS_BUTTON, DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton(Constants.VALIDATION_POS_BUTTON, { dialog, id ->
                     dialog.dismiss()
                 }).create().show()
 

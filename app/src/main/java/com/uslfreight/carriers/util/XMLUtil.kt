@@ -6,10 +6,10 @@ import java.io.IOException
 import java.io.StringReader
 
 
-class XMLUtil(val parser: XmlPullParser) {
+class XMLUtil(private val parser: XmlPullParser) {
 
     fun getTimerValue(xml: String, default: Long): Long{
-        var timerValue: Long = 0L
+        var timerValue = 0L
         try {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(StringReader(xml))

@@ -15,7 +15,7 @@ interface MainLocationView {
     fun showErrorDialog(title: String, message: String)
 }
 
-class MainLocationPresenter(val view: MainLocationView, val interactor: LocationInteractor, val context: Context): OnLocationRequestCallback{
+class MainLocationPresenter(private val view: MainLocationView, private val interactor: LocationInteractor, context: Context): OnLocationRequestCallback{
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var reportInteral: Long = 0L
@@ -31,6 +31,10 @@ class MainLocationPresenter(val view: MainLocationView, val interactor: Location
 
     override fun onReportIntervalSuccess(reportInteral: Long) {
         this.reportInteral = reportInteral
+    }
+
+    override fun onReportIntervalFailure(e: Throwable) {
+        view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
     }
 
     fun stateButtonClicked() {
@@ -84,7 +88,7 @@ class MainLocationPresenter(val view: MainLocationView, val interactor: Location
     private fun isValidPhoneFormat(phoneNumber: String): Boolean = (phoneNumber.length == 10)
 
     private fun formatPhoneNumber(phoneNumber: String): String {
-        var formatted = StringBuilder()
+        val formatted = StringBuilder()
         val pattern = Pattern.compile("\\d+")
         val matcher = pattern.matcher(phoneNumber)
         while(matcher.find()) {

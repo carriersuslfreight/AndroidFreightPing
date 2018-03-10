@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import com.uslfreight.carriers.exception.LocationRequestException
 
-class LocationManagementUtil (val context: Context){
+class LocationManagementUtil (private val context: Context){
 
     fun getLocation(): Pair<String, String> {
         var latitude = ""
