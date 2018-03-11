@@ -1,6 +1,7 @@
 package com.uslfreight.carriers.location
 
 import android.content.SharedPreferences
+import com.crashlytics.android.Crashlytics
 import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
@@ -64,6 +65,7 @@ class MainLocationPresenterImpl(
                         savePhoneNumber(phoneNumber)
                     }
                     view.setTrackButtonState(TrackingState.Tracking(Constants.BUTTON_STATE_TITLE_TRACKING))
+                    logUser(phoneNumber)
                     interactor.startReportingService(phoneNumber, reportInteral)
                 }
                 else {
@@ -101,5 +103,9 @@ class MainLocationPresenterImpl(
             formatted.append(matcher.group())
         }
         return formatted.toString()
+    }
+
+    private fun logUser(phoneNumber: String) {
+        Crashlytics.setUserIdentifier(phoneNumber)
     }
 }

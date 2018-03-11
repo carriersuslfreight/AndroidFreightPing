@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.uslfreight.carriers.exception.LocationRequestException
 import com.uslfreight.carriers.network.NetworkResponseCallback
 import com.uslfreight.carriers.request.ReportLocationRequest
@@ -42,10 +43,12 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
         }
         catch (ie: InterruptedException) {
             Thread.currentThread().interrupt()
+            Crashlytics.logException(ie)
             sendBroadcastEvent(Constants.INTERRUPTED_THREAD_ERROR)
         }
         catch( le: LocationRequestException ) {
             Thread.currentThread().interrupt()
+            Crashlytics.logException(le)
             sendBroadcastEvent(le.message ?: Constants.LOCATION_REQUEST_ERROR)
         }
     }

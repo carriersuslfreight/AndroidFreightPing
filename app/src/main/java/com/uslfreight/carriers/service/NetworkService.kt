@@ -1,6 +1,7 @@
 package com.uslfreight.carriers.service
 
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.uslfreight.carriers.network.ApiEndpoints
 import com.uslfreight.carriers.network.NetworkResponseCallback
 import com.uslfreight.carriers.request.NetworkRequest
@@ -56,15 +57,17 @@ class NetworkServiceImpl: NetworkService {
                         callback.onSuccess(bodyContent)
                     } catch (e: IOException) {
                         Log.e(TAG, "Unable to retrieve response", e)
+                        Crashlytics.logException(e)
                         onFailure(call, e)
                     }
 
                 }
             }
 
-            override fun onFailure(call: Call<ResponseBody>, throwable: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Crashlytics.logException(t)
                 callback.onFailure(Constants.NETWORK_REQUEST_CALL_FAILURE)
-                Log.e(TAG, Constants.NETWORK_REQUEST_CALL_FAILURE, throwable)
+                Log.e(TAG, Constants.NETWORK_REQUEST_CALL_FAILURE, t)
             }
         })
     }

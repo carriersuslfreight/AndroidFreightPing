@@ -3,6 +3,7 @@ package com.uslfreight.carriers.location
 import android.content.Context
 import android.util.Log
 import android.util.Xml
+import com.crashlytics.android.Crashlytics
 import com.uslfreight.carriers.network.NetworkResponseCallback
 import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.service.LocationReportingService
@@ -36,6 +37,7 @@ class LocationInteractorImpl (private val networkService: NetworkService, privat
             networkService.sendRequest(request, this)
         }
         catch(e: Exception) {
+            Crashlytics.logException(e)
             callback.onReportIntervalFailure(e)
         }
     }
@@ -57,6 +59,7 @@ class LocationInteractorImpl (private val networkService: NetworkService, privat
         }
         catch(e: Exception) {
             // NOOP, use default value
+            Crashlytics.logException(e)
             callback.onReportIntervalSuccess(Constants.DEFAULT_REPORTING_INTERVAL * 60L * 1000L)
         }
     }
