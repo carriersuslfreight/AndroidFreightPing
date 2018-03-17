@@ -3,10 +3,12 @@ package com.uslfreight.carriers.location
 import android.content.SharedPreferences
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
+import com.crashlytics.android.answers.LoginEvent
 import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
+
+
 
 interface MainLocationView {
 
@@ -85,7 +87,7 @@ class MainLocationPresenterImpl(
 
             }
             is TrackingState.Error -> {
-                view.setTrackButtonState(TrackingState.Error)
+                initializeState(false)
                 interactor.stopReportingService()
             }
         }
@@ -117,6 +119,8 @@ class MainLocationPresenterImpl(
 
     private fun logUser(phoneNumber: String) {
         Crashlytics.setUserIdentifier(phoneNumber)
-        Answers.getInstance().logCustom(CustomEvent("Phone $phoneNumber initiated tracking"))
+        Answers.getInstance().logLogin(LoginEvent()
+                .putMethod(phoneNumber)
+                .putSuccess(true))
     }
 }
