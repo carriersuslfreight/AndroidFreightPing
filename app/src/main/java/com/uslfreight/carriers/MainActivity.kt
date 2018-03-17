@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
             }
             is TrackingState.Error -> {
                 trackStateButton.isEnabled = true
-                trackStateButton.text = Constants.DEFAULT_BUTTON_STATE_TITLE
+                initializeView(null)
             }
         }
     }
@@ -143,8 +143,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     private fun goToSettings() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", packageName, null)
-        intent.data = uri
+        intent.data = Uri.fromParts("package", packageName, null)
         startActivityForResult(intent, Constants.REQUEST_APP_SETTINGS_CODE)
     }
 

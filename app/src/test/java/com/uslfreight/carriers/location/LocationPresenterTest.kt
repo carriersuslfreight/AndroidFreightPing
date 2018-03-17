@@ -64,7 +64,7 @@ class LocationPresenterTest {
 
     @Test
     fun testInitializeState() {
-        presenter.initializeState()
+        presenter.initializeState(true)
         verify(interactor).setCallback(any())
         verify(interactor).requestIterationTime(any())
     }
@@ -72,12 +72,6 @@ class LocationPresenterTest {
     @Test
     fun testOnReportIntervalSuccess() {
         callback.onReportIntervalSuccess(0L)
-    }
-
-    @Test
-    fun testOnReportIntervalFailure() {
-        callback.onReportIntervalFailure(Exception())
-        verify(view).showErrorDialog(any(), any())
     }
 
     @Test
@@ -103,7 +97,8 @@ class LocationPresenterTest {
     fun testStateButtonClickedError(){
         `when`(view.getTrackingButtonState()).thenReturn(TrackingState.Error)
         presenter.stateButtonClicked()
-        verify(view).setTrackButtonState(TrackingState.Error)
+        verify(view).setTrackButtonState(TrackingState.NotTracking(null))
+        verify(view).initializeView(null)
         verify(interactor).stopReportingService()
     }
 
