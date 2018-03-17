@@ -41,8 +41,12 @@ class MainLocationPresenterImpl(
     }
 
     override fun onReportIntervalFailure(e: Throwable) {
-        // NOOP: fail silently as per requirements
-//        view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
+        try {
+            Crashlytics.log("Network unavailable for reporting phone: ${view.getPhoneNumber()}")
+        }
+        catch(e: Exception) {
+            // NOOP: fail silently as per requirements
+        }
     }
 
     override fun stateButtonClicked() {
