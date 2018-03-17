@@ -81,7 +81,7 @@ class NetworkServiceImpl: NetworkService {
                     if( body != null )ongoing.post(body)
                     chain.proceed(ongoing.build())
                 }
-                .addInterceptor(LoggingInterceptor())
+//                .addInterceptor(LoggingInterceptor())
                 .connectTimeout(connectTimeout.toLong(), TimeUnit.SECONDS)
                 .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
         return builder.build()

@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
 
     private fun showPermissionDialog() {
         var alertDialog: AlertDialog? = null
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.alertDialogStyle)
         builder.setTitle(Constants.SETTINGS_DIALOG_TITLE)
         builder.setMessage(Constants.SETTINGS_DIALOG_MESSAGE)
         builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON, { dialog, id ->
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     }
 
     override fun showErrorDialog(title: String, message: String) {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this, R.style.alertDialogStyle)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(Constants.VALIDATION_POS_BUTTON, { dialog, id ->

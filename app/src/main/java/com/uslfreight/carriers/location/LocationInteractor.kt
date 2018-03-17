@@ -38,7 +38,7 @@ class LocationInteractorImpl (private val networkService: NetworkService, privat
         }
         catch(e: Exception) {
             Crashlytics.logException(e)
-            callback.onReportIntervalFailure(e)
+            onFailure(e.localizedMessage)
         }
     }
 

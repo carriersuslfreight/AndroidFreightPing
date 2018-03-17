@@ -41,7 +41,8 @@ class MainLocationPresenterImpl(
     }
 
     override fun onReportIntervalFailure(e: Throwable) {
-        view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
+        // NOOP: fail silently as per requirements
+//        view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
     }
 
     override fun stateButtonClicked() {
@@ -76,7 +77,6 @@ class MainLocationPresenterImpl(
             is TrackingState.Error -> {
                 view.setTrackButtonState(TrackingState.Error)
                 interactor.stopReportingService()
-                // show error dialog
             }
         }
     }
