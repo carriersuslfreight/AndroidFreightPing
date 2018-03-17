@@ -22,6 +22,7 @@ import com.uslfreight.carriers.location.MainLocationView
 import com.uslfreight.carriers.location.TrackingState
 import com.uslfreight.carriers.service.LocationBroadcastReceiver
 import com.uslfreight.carriers.service.NetworkServiceImpl
+import com.uslfreight.carriers.service.OnBroadCastReceivedListener
 import com.uslfreight.carriers.util.Constants
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,7 +45,17 @@ class MainActivity : AppCompatActivity(), MainLocationView {
 
         // Register Broadcast Receiver with system
         val intentFilter = IntentFilter(Constants.BROADCAST_EVENT)
-        val broadcastReceiver = LocationBroadcastReceiver()
+        val broadcastReceiver = LocationBroadcastReceiver(object: OnBroadCastReceivedListener {
+            override fun onSuccess(message: String?) {
+                message?.let {
+                    Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                }
+            }
+            override fun onError(message: String?) {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                presenter.initializeState(false)
+            }
+        })
         LocalBroadcastManager.getInstance(this).registerReceiver( broadcastReceiver, intentFilter)
 
         presenter = MainLocationPresenterImpl(
@@ -56,13 +67,14 @@ class MainActivity : AppCompatActivity(), MainLocationView {
             checkPermissions()
         }
 
-        presenter.initializeState()
+        presenter.initializeState(true)
     }
 
     override fun initializeView(phoneNumber: String?) {
         phoneNumber?.let {
             phoneEditText.setText(phoneNumber)
         }
+        trackStateButton.text = Constants.DEFAULT_BUTTON_STATE_TITLE
     }
 
     override fun setTrackButtonState(trackingState: TrackingState) {
@@ -76,11 +88,11 @@ class MainActivity : AppCompatActivity(), MainLocationView {
             }
             is TrackingState.NotTracking -> {
                 trackStateButton.isEnabled = true
-                phoneEditText.setText(trackingState.phoneNumber)
-                trackStateButton.text = Constants.DEFAULT_BUTTON_STATE_TITLE
+                initializeView(trackingState.phoneNumber)
             }
             is TrackingState.Error -> {
-                trackStateButton.isEnabled = false
+                trackStateButton.isEnabled = true
+                trackStateButton.text = Constants.DEFAULT_BUTTON_STATE_TITLE
             }
         }
     }

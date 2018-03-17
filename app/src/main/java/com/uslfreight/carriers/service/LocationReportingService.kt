@@ -26,7 +26,14 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
             val action = intent.action
             if (ACTION_REPORT_LOCATION == action) {
                 phoneNumber = intent.getStringExtra(Constants.PHONE_NUMBER)
-                reportingInterval = intent.getLongExtra(Constants.LOCATION_REPORTING_INTERVAL, Constants.DEFAULT_REPORTING_INTERVAL)
+                val interval = ( intent.getLongExtra(Constants.LOCATION_REPORTING_INTERVAL, 0L) )
+                reportingInterval = if( interval == 0L ) {
+                    Constants.DEFAULT_REPORTING_INTERVAL
+                } else {
+                    interval
+                }
+
+                Log.d(TAG, "Starting background LocationReportingService with phone number: $phoneNumber, on reporting interval: $reportingInterval")
                 handleActionReportLocation()
             }
         }
@@ -49,14 +56,13 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
         catch( le: LocationRequestException ) {
             Thread.currentThread().interrupt()
             Crashlytics.logException(le)
-            sendBroadcastEvent(le.message ?: Constants.LOCATION_REQUEST_ERROR)
+            sendBroadcastEvent(Constants.LOCATION_REQUEST_ERROR)
         }
     }
 
     private fun updateLocation(locationManagement: LocationManagementUtil, networkService: NetworkService) {
         val locationPair = locationManagement.getLocation()
         Log.d(TAG, "Attempting to update location with latitude: ${locationPair.first}, and longitude: ${locationPair.second}")
-
         networkService.sendRequest(ReportLocationRequest(phoneNumber, locationPair.first, locationPair.second), this)
     }
 
@@ -73,6 +79,7 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
     override fun onFailure(message: String) {
         Log.d(TAG, "Received report update call failure response: $message")
         sendBroadcastEvent(Constants.NETWORK_REQUEST_CALL_FAILURE)
+        stopSelf()
     }
 
     private fun sendBroadcastEvent(message: String) {
@@ -85,7 +92,6 @@ class LocationReportingService: IntentService(Constants.LOCATION_REPORTING_SERVI
         private val ACTION_REPORT_LOCATION = "com.uslfreight.carriers.location.action.REPORT"
 
         fun startActionReportLocation(context: Context, phoneNumber: String, reportingInterval: Long) {
-            Log.d(TAG, "Initializing location reporting with phone number: $phoneNumber")
             val intent = Intent(context, LocationReportingService::class.java)
             intent.action = ACTION_REPORT_LOCATION
             intent.putExtra(Constants.PHONE_NUMBER, phoneNumber)

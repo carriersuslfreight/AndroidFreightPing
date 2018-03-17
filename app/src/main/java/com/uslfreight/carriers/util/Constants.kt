@@ -13,7 +13,7 @@ object Constants {
     const val MEDIA_TYPE_FORM = "application/x-www-form-urlencoded"
     const val DEFAULT_BUTTON_STATE_TITLE = "Start Tracking"
     const val BUTTON_STATE_TITLE_TRACKING = "Stop Tracking"
-    const val DEFAULT_REPORTING_INTERVAL = 10L
+    const val DEFAULT_REPORTING_INTERVAL = 10L * 60L * 1000L
 
     // Service Events
     const val BROADCAST_EVENT = "com.uslfreight.carriers.BROADCAST_EVENT"

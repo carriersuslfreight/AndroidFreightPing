@@ -5,12 +5,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
-import android.util.Log
-import android.widget.Toast
 import com.uslfreight.carriers.util.Constants
 
+interface OnBroadCastReceivedListener {
+    fun onSuccess(message: String?)
+    fun onError(message: String?)
+}
 
-class LocationBroadcastReceiver : BroadcastReceiver() {
+class LocationBroadcastReceiver(val listener: OnBroadCastReceivedListener) : BroadcastReceiver() {
 
     private val TAG = LocationBroadcastReceiver::class.java.simpleName
 
@@ -19,14 +21,23 @@ class LocationBroadcastReceiver : BroadcastReceiver() {
         val asyncTask = @SuppressLint("StaticFieldLeak")
         object : AsyncTask<String, Int, String>() {
             override fun doInBackground(vararg params: String): String {
-                Log.d(TAG, "Received broadcast action: ${intent.action}, intent: $intent")
                 pendingResult?.finish()
                 return intent.getStringExtra(Constants.LOCATION_REPORTING_BROADCAST_ACTION)
             }
 
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
-                Toast.makeText(context, result, Toast.LENGTH_LONG).show()
+
+                when(result) {
+                    Constants.NETWORK_REQUEST_CALL_FAILURE,
+                    Constants.INTERRUPTED_THREAD_ERROR,
+                    Constants.LOCATION_REQUEST_ERROR -> {
+                        listener.onError(result)
+                    }
+                    else -> {
+                        listener.onSuccess(result)
+                    }
+                }
             }
         }
         asyncTask.execute()

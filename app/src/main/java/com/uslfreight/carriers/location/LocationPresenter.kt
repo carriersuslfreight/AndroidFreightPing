@@ -2,6 +2,8 @@ package com.uslfreight.carriers.location
 
 import android.content.SharedPreferences
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import com.uslfreight.carriers.request.GetTimerRequest
 import com.uslfreight.carriers.util.Constants
 import java.util.regex.Pattern
@@ -16,7 +18,7 @@ interface MainLocationView {
 }
 
 interface MainLocationPresenter {
-    fun initializeState()
+    fun initializeState(requestIterationTime: Boolean)
     fun stateButtonClicked()
 }
 
@@ -27,13 +29,15 @@ class MainLocationPresenterImpl(
 
     private var reportInteral: Long = 0L
 
-    override fun initializeState() {
+    override fun initializeState(requestIterationTime: Boolean) {
         view.setTrackButtonState(TrackingState.NotTracking(getSavedPhoneNumber()))
         view.initializeView(getSavedPhoneNumber())
         interactor.setCallback(this)
 
         // Make timer request
-        interactor.requestIterationTime(GetTimerRequest())
+        if( requestIterationTime ) {
+            interactor.requestIterationTime(GetTimerRequest())
+        }
     }
 
     override fun onReportIntervalSuccess(reportInteral: Long) {
@@ -43,6 +47,9 @@ class MainLocationPresenterImpl(
     override fun onReportIntervalFailure(e: Throwable) {
         try {
             Crashlytics.log("Network unavailable for reporting phone: ${view.getPhoneNumber()}")
+            view.initializeView(getSavedPhoneNumber())
+            interactor.stopReportingService()
+            view.showErrorDialog(Constants.NETWORK_ERROR_TITLE, Constants.NETWORK_ERROR_MESSAGE)
         }
         catch(e: Exception) {
             // NOOP: fail silently as per requirements
@@ -57,7 +64,6 @@ class MainLocationPresenterImpl(
                 interactor.stopReportingService()
             }
             is TrackingState.NotTracking -> {
-
                 val phoneNumber = formatPhoneNumber(view.getPhoneNumber())
                 if (isValidPhoneFormat(phoneNumber)) {
                     val savedPhoneNumber = getSavedPhoneNumber()
@@ -111,5 +117,6 @@ class MainLocationPresenterImpl(
 
     private fun logUser(phoneNumber: String) {
         Crashlytics.setUserIdentifier(phoneNumber)
+        Answers.getInstance().logCustom(CustomEvent("Phone $phoneNumber initiated tracking"))
     }
 }
