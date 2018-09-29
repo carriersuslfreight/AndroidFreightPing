@@ -126,16 +126,16 @@ class MainActivity : AppCompatActivity(), MainLocationView {
     }
 
     private fun showPermissionDialog() {
-        var alertDialog: AlertDialog? = null
+        var alertDialog: AlertDialog?
         val builder = AlertDialog.Builder(this, R.style.alertDialogStyle)
         builder.setTitle(Constants.SETTINGS_DIALOG_TITLE)
         builder.setMessage(Constants.SETTINGS_DIALOG_MESSAGE)
-        builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON, { dialog, id ->
+        builder.setPositiveButton(Constants.SETTINGS_DIALOG_POS_BUTTON) { dialog, id ->
             goToSettings()
-        })
-        builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON, { dialog, id ->
+        }
+        builder.setNegativeButton(Constants.SETTINGS_DIALOG_NEG_BUTTON) { dialog, id ->
             dialog.dismiss()
-        })
+        }
         alertDialog = builder.create()
         alertDialog.show()
     }
@@ -159,9 +159,9 @@ class MainActivity : AppCompatActivity(), MainLocationView {
         AlertDialog.Builder(this, R.style.alertDialogStyle)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(Constants.VALIDATION_POS_BUTTON, { dialog, id ->
+                .setPositiveButton(Constants.VALIDATION_POS_BUTTON) { dialog, id ->
                     dialog.dismiss()
-                }).create().show()
+                }.create().show()
 
     }
 
