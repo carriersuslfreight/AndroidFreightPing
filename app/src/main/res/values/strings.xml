@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">USLFreightPing</string>
+    <string name="app_name">USL Freight Ping</string>
+    <string name="launcher_title">Freight Ping</string>
+    <string name="phone_title">Enter your phone number:</string>
+    <string name="button_title">Start Tracking</string>
+    <string name="phone_hint_mask">(___) ___ - ____</string>
 </resources>
